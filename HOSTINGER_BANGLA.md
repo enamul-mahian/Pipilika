@@ -11,7 +11,8 @@
 
 ## ধাপ ২: Hostinger এ Node.js অ্যাপ বানান
 1. hPanel এ যান: **Websites → Add website → Node.js Apps** (বা "Deploy Node.js app")।
-2. **Upload files** বাছুন এবং `pipilika-site.zip` আপলোড করুন।
+2. **Import Git repository** (GitHub) বাছুন → GitHub একাউন্ট কানেক্ট করুন → `enamul-mahian/pipilika` repo, branch `main` বাছুন।
+   - (GitHub না চাইলে **Upload files** দিয়ে `pipilika-site.zip` আপলোডও করা যায়।)
 3. সেটিংস এভাবে দিন:
    - Framework: **Next.js**
    - Node version: **22.x**
@@ -30,6 +31,8 @@
 5. **Deploy** চাপুন। প্রথমবার ৩–৮ মিনিট লাগতে পারে।
    - প্রথম deploy এ ডাটাবেস নিজে থেকে তৈরি হবে এবং ডেমো প্রোডাক্ট, পেজ আর লগইন বসে যাবে।
    - পরের deploy গুলোতে আপনার ডাটা মুছবে না।
+
+   - GitHub দিয়ে কানেক্ট করলে, পরে কোড আপডেট হলে Hostinger এ **Redeploy** চাপলেই নতুন সাইট চলে আসবে (অটো-deploy অপশন থাকলে সেটা চালু রাখুন)।
 
 ## ধাপ ৩: ডোমেইন
 অ্যাপের সেটিংসে **Domain** থেকে `thepipilika.com` যুক্ত করুন। ডোমেইন Hostinger এ থাকলে DNS নিজে থেকে ঠিক হয়ে যাবে। SSL ফ্রি।
