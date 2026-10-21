@@ -14,10 +14,12 @@ export function ProductCard({ p }: { p: CardProduct }) {
   const simple = !p.variants.length && !p.modifiers.some((m) => m.required) && p.type === "FIXED";
   const out = p.stock != null && p.stock <= 0 && !p.madeToOrder;
   return (
-    <article className="group card flex flex-col overflow-hidden">
+    <article className="group card fx-glow fx-lift flex flex-col overflow-hidden">
       <Link href={`/product/${p.slug}`} className="relative block aspect-[4/3] overflow-hidden bg-blush">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={p.images[0]?.url || "/demo/pastries.jpg"} alt={p.name} loading="lazy" className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+        <img src={p.images[0]?.url || "/demo/pastries.jpg"} alt={p.name} loading="lazy" className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-110" />
+        <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-deep/45 via-transparent to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
+        <span aria-hidden className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 translate-y-3 rounded-full bg-white/90 px-4 py-1.5 text-xs font-bold text-brand opacity-0 shadow-lg backdrop-blur transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">View details</span>
         {p.compareAt && p.compareAt > from && <span className="chip absolute left-2 top-2 bg-brand text-white">Sale</span>}
         {out && <span className="chip absolute left-2 top-2 bg-ink text-white">Sold out</span>}
       </Link>

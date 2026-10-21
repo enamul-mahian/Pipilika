@@ -40,25 +40,27 @@ export async function RenderBlock({ b }: { b: Block }) {
       const feats = lines(p.features);
       const icons = [IconTruck, IconStar, IconHeart, IconCrown];
       return (
-        <section className="relative overflow-hidden bg-brand-deep text-white">
+        <section className="fx-hero relative overflow-hidden bg-brand-deep text-white" data-no-reveal>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-cover object-right opacity-90" />
+          <img src={p.image} alt="" className="fx-kenburns absolute inset-0 h-full w-full object-cover object-right opacity-90" />
+          <span aria-hidden className="fx-blob fx-blob-1" /><span aria-hidden className="fx-blob fx-blob-2" />
+          <span aria-hidden className="fx-sparkles" />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-deep via-brand/90 to-transparent md:via-brand/80 md:to-transparent" />
-          <div className="wrap relative py-12 md:py-20">
+          <div className="fx-hero-in wrap relative py-12 md:py-20">
             {p.eyebrow && <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/85 md:text-xs">{p.eyebrow}</p>}
             <h1 className="mt-3 max-w-xl text-4xl leading-[1.05] md:text-6xl">
-              {p.title} <span className="block text-gold">{p.highlight}</span>
+              {p.title} <span className="fx-shimmer block">{p.highlight}</span>
             </h1>
             {p.subtitle && <p className="mt-4 max-w-md text-white/90 md:text-lg">{p.subtitle}</p>}
             <div className="mt-6 flex flex-wrap gap-3">
-              {p.primaryLabel && <Link href={p.primaryHref || "/"} className="btn border border-gold/70 bg-brand text-white hover:bg-brand-deep">{p.primaryLabel} →</Link>}
-              {p.secondaryLabel && <Link href={p.secondaryHref || "/"} className="btn border border-white text-white hover:bg-white/10">{p.secondaryLabel}</Link>}
+              {p.primaryLabel && <Link href={p.primaryHref || "/"} className="btn fx-shine fx-pulse border border-gold/70 bg-brand text-white hover:bg-brand-deep">{p.primaryLabel} →</Link>}
+              {p.secondaryLabel && <Link href={p.secondaryHref || "/"} className="btn border border-white/80 bg-white/5 text-white backdrop-blur hover:bg-white/15">{p.secondaryLabel}</Link>}
             </div>
             {feats.length > 0 && (
               <ul className="mt-8 grid max-w-2xl grid-cols-2 gap-3 text-xs md:flex md:gap-6 md:text-sm">
                 {feats.map((f, i) => {
                   const I = icons[i % icons.length];
-                  return <li key={f} className="flex items-center gap-2"><span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/60"><I className="h-4 w-4" /></span>{f}</li>;
+                  return <li key={f} className="flex items-center gap-2"><span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/50 bg-white/10 backdrop-blur"><I className="h-4 w-4" /></span>{f}</li>;
                 })}
               </ul>
             )}
@@ -146,10 +148,10 @@ export async function RenderBlock({ b }: { b: Block }) {
       const icons = [IconCrown, IconStar, IconTruck, IconCheck, IconHeart];
       return (
         <section className="wrap py-6">
-          <ul className="grid grid-cols-2 gap-4 rounded-2xl bg-blush p-5 md:grid-cols-5">
+          <ul className="fx-features grid grid-cols-2 gap-4 rounded-2xl p-5 md:grid-cols-5">
             {items.map(([a, b2], i) => {
               const I = icons[i % icons.length];
-              return <li key={a} className="flex items-center gap-3 text-sm"><I className="h-6 w-6 shrink-0 text-brand" /><span><b className="block">{a}</b>{b2}</span></li>;
+              return <li key={a} className="group flex items-center gap-3 text-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-brand shadow-sm ring-1 ring-gold/30 transition duration-300 group-hover:-translate-y-0.5 group-hover:rotate-6 group-hover:bg-brand group-hover:text-white"><I className="h-5 w-5" /></span><span><b className="block">{a}</b>{b2}</span></li>;
             })}
           </ul>
         </section>

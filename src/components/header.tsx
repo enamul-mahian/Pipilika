@@ -14,7 +14,7 @@ export async function Header() {
       {s.header.announcement && (
         <div className="bg-brand-deep px-4 py-1.5 text-center text-xs font-medium text-white/95">{s.header.announcement}</div>
       )}
-      <header className="sticky top-0 z-40 border-b border-line bg-cream/95 backdrop-blur">
+      <header data-site-header className="fx-header sticky top-0 z-40 border-b border-line bg-cream/80 backdrop-blur-md transition-shadow duration-300">
         <div className="wrap flex items-center gap-4 py-2.5 lg:gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${s.store.name} home`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
