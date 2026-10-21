@@ -742,3 +742,11 @@ model Subscriber {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+/// Uploaded files kept in the database, so they survive redeploys on hosts with a temporary disk.
+model StoredFile {
+  key       String   @id
+  mime      String
+  data      Bytes
+  createdAt DateTime @default(now())
+}

@@ -94,7 +94,12 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
     const rows = await db.setting.findMany();
     const over: Record<string, unknown> = {};
     for (const r of rows) over[r.key] = r.value;
-    return merge(DEFAULT_SETTINGS, over);
+    const out = merge(DEFAULT_SETTINGS, over);
+    // An uploaded logo/favicon whose file was lost (e.g. disk wiped by a redeploy) falls back to the default logo.
+    const { fileUrlExists } = await import("@/lib/providers/storage");
+    if (!out.store.logo || !(await fileUrlExists(out.store.logo))) out.store.logo = DEFAULT_SETTINGS.store.logo;
+    if (out.store.favicon && !(await fileUrlExists(out.store.favicon))) out.store.favicon = "";
+    return out;
   } catch {
     return DEFAULT_SETTINGS;
   }

@@ -7,6 +7,12 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#fdf7f1",
     theme_color: "#b3161f",
-    icons: [{ src: "/brand/logo.png", sizes: "256x256", type: "image/png" }],
+    id: "/",
+    scope: "/",
+    description: "Order cakes, pastries and custom celebration cakes from Pipilika Bakery.",
+    icons: [
+      { src: "/brand/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/brand/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+    ],
   };
 }

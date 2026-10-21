@@ -3,6 +3,7 @@ import "./globals.css";
 import { getSettings } from "@/lib/settings";
 import { CartProvider } from "@/components/cart";
 import { Analytics } from "@/components/analytics";
+import { InstallApp } from "@/components/install-app";
 
 const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -15,7 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: s.seo.keywords,
     openGraph: { type: "website", siteName: s.store.name, images: [s.seo.ogImage], locale: "en_BD" },
     twitter: { card: "summary_large_image" },
-    icons: { icon: s.store.favicon || s.store.logo, apple: s.store.favicon || s.store.logo },
+    icons: { icon: s.store.favicon || s.store.logo, apple: "/brand/apple-touch-icon.png" },
+    appleWebApp: { capable: true, title: s.store.name, statusBarStyle: "default" },
     manifest: "/manifest.webmanifest",
   };
 }
@@ -50,6 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <CartProvider>{children}</CartProvider>
+        <InstallApp />
         <Analytics ga4={s.analytics.ga4} gtm={s.analytics.gtm} pixel={s.analytics.metaPixel} requireConsent={s.analytics.requireConsent} />
       </body>
     </html>

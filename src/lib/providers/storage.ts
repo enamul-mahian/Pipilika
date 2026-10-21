@@ -1,7 +1,8 @@
-// File storage adapter: local disk (default) or any S3-compatible bucket (AWS S3, Cloudflare R2, DO Spaces).
+// File storage adapter: database (default; survives redeploys), local disk, or any S3-compatible bucket (AWS S3, Cloudflare R2, DO Spaces).
 import { promises as fs } from "fs";
 import path from "path";
 import crypto from "crypto";
+import { db } from "@/lib/db";
 
 const ALLOWED: Record<string, string> = {
   "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/svg+xml": "svg", "application/pdf": "pdf",
@@ -25,6 +26,7 @@ export function checkImage(buf: Buffer, mime: string) {
   return { mime, buf };
 }
 
+const driver = () => process.env.STORAGE_DRIVER || "db";
 const root = () => path.resolve(process.env.UPLOAD_DIR || "./storage");
 
 async function s3() {
@@ -39,7 +41,9 @@ async function s3() {
 
 export async function putFile(buf: Buffer, mime: string, folder: string) {
   const key = `${folder}/${new Date().toISOString().slice(0, 7)}/${crypto.randomBytes(12).toString("hex")}.${ALLOWED[mime] ?? "bin"}`;
-  if (process.env.STORAGE_DRIVER === "s3") {
+  if (driver() === "db") {
+    await db.storedFile.create({ data: { key, mime, data: new Uint8Array(buf) } });
+  } else if (driver() === "s3") {
     const { client, PutObjectCommand } = await s3();
     await client.send(new PutObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key, Body: buf, ContentType: mime }));
   } else {
@@ -53,15 +57,26 @@ export async function putFile(buf: Buffer, mime: string, folder: string) {
 export async function getFile(key: string): Promise<Buffer | null> {
   if (key.includes("..")) return null;
   try {
-    if (process.env.STORAGE_DRIVER === "s3") {
+    if (driver() === "s3") {
       const { client, GetObjectCommand } = await s3();
       const r = await client.send(new GetObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key }));
       return Buffer.from(await r.Body!.transformToByteArray());
     }
-    return await fs.readFile(path.join(root(), key));
+    // db driver also falls back to disk for files saved before the switch
+    const row = driver() === "db" ? await db.storedFile.findUnique({ where: { key }, select: { data: true } }) : null;
+    return row ? Buffer.from(row.data) : await fs.readFile(path.join(root(), key));
   } catch {
     return null;
   }
+}
+
+/** True when an uploaded file URL (/api/v1/files/...) still has its file. Other URLs are assumed fine. */
+export async function fileUrlExists(url: string) {
+  const pre = "/api/v1/files/";
+  if (!url.startsWith(pre) || driver() === "s3") return true;
+  const key = url.slice(pre.length);
+  if (driver() === "db" && (await db.storedFile.count({ where: { key } }))) return true;
+  return fs.access(path.join(root(), key)).then(() => true, () => false);
 }
 
 export const mimeOf = (key: string) =>
