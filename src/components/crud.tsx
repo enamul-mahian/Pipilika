@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { api, useAction, Alert, fileToDataUrl } from "./ui";
+import { api, useAction, Alert, uploadImage } from "./ui";
 
 export type Field = {
   key: string; label: string;
@@ -29,7 +29,7 @@ export function ImageInput({ value, onChange }: { value: string; onChange: (v: s
         <input type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={async (e) => {
           const f = e.target.files?.[0]; if (!f) return;
           setBusy(true);
-          try { const r = await api<{ url: string }>("/api/v1/admin/upload", { body: { file: await fileToDataUrl(f, 1600) } }); onChange(r.url); } catch (err) { alert((err as Error).message); }
+          try { onChange(await uploadImage(f, 1600)); } catch (err) { alert((err as Error).message); }
           setBusy(false);
         }} />
       </label>

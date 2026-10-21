@@ -11,9 +11,12 @@ export const MAX_UPLOAD = 8 * 1024 * 1024;
 export function parseDataUrl(dataUrl: string) {
   const m = /^data:([\w/+.-]+);base64,(.+)$/s.exec(dataUrl);
   if (!m) throw new Error("Invalid file data");
-  const mime = m[1];
+  return checkImage(Buffer.from(m[2], "base64"), m[1]);
+}
+
+/** Validates an uploaded image by type, size and magic number. */
+export function checkImage(buf: Buffer, mime: string) {
   if (!ALLOWED[mime] || mime === "image/svg+xml") throw new Error("Only PNG, JPG or WEBP images are allowed");
-  const buf = Buffer.from(m[2], "base64");
   if (buf.length > MAX_UPLOAD) throw new Error("File too large (max 8 MB)");
   // magic-number check
   const sig = buf.subarray(0, 12).toString("hex");

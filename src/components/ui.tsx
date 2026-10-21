@@ -8,7 +8,7 @@ export async function api<T = any>(url: string, opts: { method?: string; body?: 
     body: opts.body ? JSON.stringify(opts.body) : undefined,
   });
   const j = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(j.error || `Request failed (${res.status})`);
+  if (!res.ok) throw new Error(j.error || (res.status === 403 ? "Blocked by the server firewall (403). Please try again or use a smaller image." : `Request failed (${res.status})`));
   return j as T;
 }
 
@@ -38,6 +38,18 @@ export function Alert({ error, msg }: { error?: string | null; msg?: string | nu
   if (error) return <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>;
   if (msg) return <p role="status" className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{msg}</p>;
   return null;
+}
+
+/** Resizes an image in the browser and uploads it as a binary file (multipart). Returns the public URL. */
+export async function uploadImage(file: File, maxDim = 1600): Promise<string> {
+  const dataUrl = await fileToDataUrl(file, maxDim);
+  const blob = await (await fetch(dataUrl)).blob();
+  const fd = new FormData();
+  fd.append("file", blob, file.type === "image/png" ? "image.png" : "image.jpg");
+  const res = await fetch("/api/v1/admin/upload", { method: "POST", body: fd });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(j.error || `Upload failed (${res.status})`);
+  return j.url as string;
 }
 
 export function fileToDataUrl(file: File, maxDim = 2000): Promise<string> {
