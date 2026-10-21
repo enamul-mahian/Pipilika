@@ -394,9 +394,9 @@ export function CakeDesigner({ config: cfg, mode = "customer", initialGalleryId,
   const STEPS = ["Start", "Shape", "Cake", "Style", "Design", mode === "pos" ? "Save" : "Order"];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
       {/* ---------- Live preview ---------- */}
-      <div className="lg:order-2">
+      <div className="min-w-0 lg:order-2">
         <div className="card sticky top-20 p-3">
           <div className="mb-2 flex items-center justify-between text-sm">
             <b>Live preview</b>
@@ -513,7 +513,7 @@ export function CakeDesigner({ config: cfg, mode = "customer", initialGalleryId,
       </div>
 
       {/* ---------- Steps ---------- */}
-      <div className="lg:order-1">
+      <div className="min-w-0 lg:order-1">
         <ol className="mb-4 flex gap-1 overflow-x-auto pb-1" aria-label="Steps">
           {STEPS.map((t, i) => (
             <li key={t}><button type="button" onClick={() => setStep(i)} className={`flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold ${i === step ? "bg-brand text-white" : i < step ? "bg-blush text-brand" : "bg-white text-muted"}`}><span className="grid h-5 w-5 place-items-center rounded-full border border-current text-xs">{i + 1}</span>{t}</button></li>

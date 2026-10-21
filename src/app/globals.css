@@ -4,9 +4,11 @@
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
-  body { @apply bg-cream text-ink font-body antialiased; }
+  body { @apply bg-cream text-ink font-body antialiased; overflow-x: clip; }
   h1, h2, h3 { @apply font-display font-normal; text-wrap: balance; }
   :focus-visible { outline: 3px solid #e0b04f; outline-offset: 2px; }
+  /* Grid children may shrink below their content width (stops scrolling tab rows / wide tables from widening the page on phones). */
+  .grid > * { min-width: 0; }
 }
 
 @layer components {

@@ -74,11 +74,11 @@ function Sale({ products, categories, onDone, recent }: { products: P[]; categor
     onDone(r); setLines([]); setDiscount(""); setReceived(""); setTrxId(""); setCust({ name: "", phone: "" }); setShowCart(false);
   });
   return (
-    <div className="grid flex-1 lg:grid-cols-[1fr_380px]">
-      <section className="p-4">
+    <div className="grid flex-1 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <section className="min-w-0 p-4">
         <div className="mb-3 flex flex-wrap gap-2">
           <input className="input !w-full sm:!w-64 !py-2" placeholder="Search products…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search products" />
-          <div className="flex gap-1 overflow-x-auto"><button className={`tab ${!cat ? "tab-on" : ""}`} onClick={() => setCat("")}>All</button>{categories.map((c) => <button key={c.slug} className={`tab whitespace-nowrap ${cat === c.slug ? "tab-on" : ""}`} onClick={() => setCat(c.slug)}>{c.name}</button>)}</div>
+          <div className="flex min-w-0 max-w-full gap-1 overflow-x-auto"><button className={`tab ${!cat ? "tab-on" : ""}`} onClick={() => setCat("")}>All</button>{categories.map((c) => <button key={c.slug} className={`tab whitespace-nowrap ${cat === c.slug ? "tab-on" : ""}`} onClick={() => setCat(c.slug)}>{c.name}</button>)}</div>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
           {list.map((p) => (
