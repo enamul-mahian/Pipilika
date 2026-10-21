@@ -119,7 +119,8 @@ export function LayoutEditor({ store, header, footer }: Pick<SiteSettings, "stor
     <div className="card grid gap-4 p-4">
       <h2 className="font-body text-lg font-bold">Logo, header & footer</h2>
       <div className="grid gap-3 md:grid-cols-2">
-        <div><label className="label">Logo</label><ImageInput value={st.logo} onChange={(v) => setSt({ ...st, logo: v })} /></div>
+        <div><label className="label">Logo (PNG with transparent background works best)</label><ImageInput value={st.logo} onChange={(v) => setSt({ ...st, logo: v })} /></div>
+        <div><label className="label">Favicon (small icon in the browser tab, square PNG, e.g. 512×512 — blank = use logo)</label><ImageInput value={st.favicon ?? ""} onChange={(v) => setSt({ ...st, favicon: v })} /></div>
         <div><label className="label">Shop name</label><input className="input !py-2" value={st.name} onChange={(e) => setSt({ ...st, name: e.target.value })} /></div>
         <div className="md:col-span-2"><label className="label">Announcement bar (top of every page, blank = hidden)</label><input className="input !py-2" value={ann} onChange={(e) => setAnn(e.target.value)} /></div>
         <div><label className="label">Header menu — one per line: Label|/link</label><textarea className="input font-mono text-xs" rows={8} value={menu} onChange={(e) => setMenu(e.target.value)} /></div>

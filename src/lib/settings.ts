@@ -3,7 +3,7 @@ import { db } from "./db";
 
 export type NavLink = { label: string; href: string };
 export type SiteSettings = {
-  store: { name: string; tagline: string; founder: string; phone: string; whatsapp: string; email: string; address: string; hours: string; logo: string };
+  store: { name: string; tagline: string; founder: string; phone: string; whatsapp: string; email: string; address: string; hours: string; logo: string; favicon: string };
   header: { menu: NavLink[]; announcement: string };
   footer: { quote: string; about: string; columns: { title: string; links: NavLink[] }[]; social: { facebook: string; instagram: string; youtube: string; tiktok: string }; copyright: string };
   payments: { methods: Record<string, { enabled: boolean; instructions: string }>; advancePercent: number };
@@ -25,6 +25,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     address: "Dhaka, Bangladesh",
     hours: "Every day, 9am – 10pm",
     logo: "/brand/logo.png",
+    favicon: "",
   },
   header: {
     announcement: "Free delivery on orders over ৳2,000 inside Dhaka · Use code WELCOME10 for 10% off",

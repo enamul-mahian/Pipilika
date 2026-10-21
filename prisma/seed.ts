@@ -101,8 +101,9 @@ async function main() {
   for (const [i, [name, perKg]] of baseDefs.entries()) {
     const b = await db.cakeBase.create({ data: { name, sort: i } });
     for (const [g] of weights) {
-      const factor = g === 250 ? 1.25 : g === 500 ? 1.1 : g <= 1000 ? 1.0 : 0.95; // small cakes cost more per kg
-      await db.cakeBasePrice.create({ data: { baseId: b.id, grams: g, price: Math.round(((perKg * g) / 1000) * factor / 10) * 10 } });
+      // Owner's price list: 250 g = ৳400, then +৳300 for every extra 250 g (500 g = ৳700, 1 kg = ৳1,300 …).
+      void perKg;
+      await db.cakeBasePrice.create({ data: { baseId: b.id, grams: g, price: 400 + 300 * (g / 250 - 1) } });
     }
   }
   const opts: [string, string, number, any?][] = [

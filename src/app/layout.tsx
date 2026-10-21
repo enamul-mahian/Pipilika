@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: s.seo.keywords,
     openGraph: { type: "website", siteName: s.store.name, images: [s.seo.ogImage], locale: "en_BD" },
     twitter: { card: "summary_large_image" },
-    icons: { icon: s.store.logo, apple: s.store.logo },
+    icons: { icon: s.store.favicon || s.store.logo, apple: s.store.favicon || s.store.logo },
     manifest: "/manifest.webmanifest",
   };
 }

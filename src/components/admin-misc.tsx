@@ -13,9 +13,19 @@ export function PriceMatrix({ bases, weights, prices }: { bases: { id: string; n
   const router = useRouter();
   const a = useAction();
   const [m, setM] = useState<Record<string, number | "">>(() => Object.fromEntries(prices.map((p) => [`${p.baseId}:${p.grams}`, p.price])));
+  const [first, setFirst] = useState(400);
+  const [step, setStep] = useState(300);
+  // Fill every flavour: price for the smallest step (250 g) + step for every extra 250 g.
+  const autoFill = () => setM(Object.fromEntries(bases.flatMap((b) => weights.map((w) => [`${b.id}:${w.grams}`, Math.round(first + step * (w.grams / 250 - 1))]))));
   return (
     <div className="card overflow-x-auto p-4">
       <div className="mb-3 flex items-center justify-between"><h2 className="font-body text-lg font-bold">Base price by weight (৳)</h2><button className="btn-primary btn-sm" disabled={a.busy} onClick={() => a.run(async () => { await api("/api/v1/admin/cake-prices", { body: { prices: Object.entries(m).filter(([, v]) => v !== "").map(([k, v]) => ({ baseId: k.split(":")[0], grams: Number(k.split(":")[1]), price: Number(v) })) } }); router.refresh(); }, "Prices saved")}>Save prices</button></div>
+      <div className="mb-3 flex flex-wrap items-end gap-2 rounded-xl bg-cream p-3 text-sm">
+        <div><label className="label">250 g price (৳)</label><input type="number" className="input !w-28 !py-1.5" value={first} onChange={(e) => setFirst(Number(e.target.value) || 0)} /></div>
+        <div><label className="label">+ per extra 250 g (৳)</label><input type="number" className="input !w-28 !py-1.5" value={step} onChange={(e) => setStep(Number(e.target.value) || 0)} /></div>
+        <button type="button" className="btn-outline btn-sm" onClick={autoFill}>Fill all flavours</button>
+        <span className="text-xs text-muted">Then press Save prices. You can still change any single cell.</span>
+      </div>
       <Alert error={a.error} msg={a.msg} />
       <table className="table">
         <thead><tr><th>Base \ Weight</th>{weights.map((w) => <th key={w.grams}>{w.label}</th>)}</tr></thead>
