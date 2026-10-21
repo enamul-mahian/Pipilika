@@ -11,8 +11,14 @@ export async function middleware(req: NextRequest) {
     const hasBearer = req.headers.get("authorization")?.startsWith("Bearer ");
     const isWebhook = pathname.startsWith("/api/v1/whatsapp/webhook");
     if (origin && !hasBearer && !isWebhook) {
-      const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
-      if (new URL(origin).host !== host) return NextResponse.json({ error: "Bad origin" }, { status: 403 });
+      // Hosts behind a proxy (Hostinger, Railway…) may report a different Host header, so accept any of them.
+      const bare = (h?: string | null) => (h ?? "").split(",")[0].trim().toLowerCase().replace(/^www\./, "");
+      let site = "";
+      try { site = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "").host; } catch {}
+      const allowed = [req.headers.get("x-forwarded-host"), req.headers.get("host"), req.nextUrl.host, site].map(bare).filter(Boolean);
+      let o = "";
+      try { o = bare(new URL(origin).host); } catch {}
+      if (!allowed.includes(o)) return NextResponse.json({ error: "Bad origin" }, { status: 403 });
     }
   }
 

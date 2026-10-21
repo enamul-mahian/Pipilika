@@ -47,7 +47,8 @@ export async function startSession(userId: string, method: string) {
   c.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    // Secure only when the visitor is on https (proxies send x-forwarded-proto).
+    secure: process.env.NODE_ENV === "production" && (h.get("x-forwarded-proto") ?? "https").split(",")[0].trim() === "https",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });
